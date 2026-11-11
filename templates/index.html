@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота № 7 — AI-Агент</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light p-4">
+<div class="container bg-white p-4 rounded shadow-sm" style="max-width: 900px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>AI-Агент: «Помічник студента»</h2>
+        <form method="POST" class="d-inline">
+            <input type="hidden" name="action" value="clear">
+            <button type="submit" class="btn btn-outline-danger btn-sm">Очистити пам'ять (Memory)</button>
+        </form>
+    </div>
+
+  
+    {% if latest %}
+    <div class="card mb-4 border-primary">
+        <div class="card-header bg-primary text-white font-weight-bold">
+            Внутрішня робота агента (Планування та Інструменти)
+        </div>
+        <div class="card-body">
+            <h6 class="text-primary">План дій агента:</h6>
+            <pre class="bg-light p-2 rounded">{{ latest.plan }}</pre>
+            
+            <h6 class="text-primary mt-3">Використаний інструмент (Tool):</h6>
+            <p><code>{{ latest.tool_used }}</code></p>
+            {% if latest.tool_result %}
+            <p>Результат інструменту: <strong>{{ latest.tool_result }}</strong></p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">Історія спілкування (Memory)</div>
+        <div class="card-body style-chat" style="max-height: 400px; overflow-y: auto;">
+            {% if not history %}
+                <p class="text-muted text-center">Пам'ять порожня. Почніть спілкування з агентом!</p>
+            {% endif %}
+            {% for msg in history %}
+                <div class="mb-3 text-end">
+                    <span class="d-inline-block bg-primary text-white p-2 rounded">{{ msg.user }}</span>
+                </div>
+                <div class="mb-3 text-start">
+                    <div class="d-inline-block bg-light border p-3 rounded" style="white-space: pre-line;">{{ msg.agent }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <form method="POST">
+        <div class="input-group">
+            <input type="text" name="user_input" class="form-control" 
+                   placeholder="Наприклад: Обчисли середнє арифметичне чисел 12, 18, 25 і 30" required>
+            <button type="submit" class="btn btn-success">Надіслати агенту</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
